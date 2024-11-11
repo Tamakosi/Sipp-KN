@@ -21,7 +21,7 @@ $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
-$routes->setAutoRoute(true);
+$routes->setAutoRoute(false);
 
 /*
  * --------------------------------------------------------------------
@@ -32,9 +32,12 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
-$routes->get('/coba/(:any)/(:num)', 'Home::about/$1/$2');
-$routes->get('/users', 'Admin\Users::index');
-$routes->get('/master', 'Admin\Master::index');
+$routes->get('menu', 'Menu::index');
+$routes->get('menu/create', 'Menu::create');
+$routes->post('menu/save', 'Menu::save');
+$routes->get('menu/edit/(:segment)', 'Menu::edit/$1');
+$routes->post('menu/update/(:segment)', 'Menu::update/$1');
+$routes->delete('menu/delete/(:segment)', 'Menu::delete/$1');
 /*
  * --------------------------------------------------------------------
  * Additional Routing

@@ -1,20 +1,20 @@
 <?php
-
 namespace App\Controllers;
 
 class Home extends BaseController
 {
     public function index()
     {
-    //    echo view('layout/header');
-    //    echo view('layout/topbar');
-    //    echo view('layout/sidebar');
-       echo view('admin/overview');
-    //    echo view('layout/footer');
-    }
-
-    public function about($nama = null, $umur = 0)
-    {
-        echo "Hi, nama saya adalah $nama. Usia saya $umur tahun.";
+        $data['menu'] = $this->menuModel->findAll();
+        
+        // Render view secara terpisah
+        $header = view('layout/header');
+        $topbar = view('layout/topbar');
+        $sidebar = view('layout/sidebar');
+        $content = view('admin/overview', $data);
+        $footer = view('layout/footer');
+        
+        // Gabungkan semua view
+        return $header . $topbar . $sidebar . $content . $footer;
     }
 }
