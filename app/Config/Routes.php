@@ -32,12 +32,24 @@ $routes->setAutoRoute(false);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
-$routes->get('menu', 'Menu::index');
-$routes->get('menu/create', 'Menu::create');
-$routes->post('menu/save', 'Menu::save');
-$routes->get('menu/edit/(:segment)', 'Menu::edit/$1');
-$routes->post('menu/update/(:segment)', 'Menu::update/$1');
-$routes->delete('menu/delete/(:segment)', 'Menu::delete/$1');
+$routes->get('menu', 'MenuController::index');
+$routes->get('menu/create', 'MenuController::create');
+$routes->post('menu/save', 'MenuController::save');
+$routes->get('menu/edit/(:segment)', 'MenuController::edit/$1');
+$routes->post('menu/update/(:segment)', 'MenuController::update/$1');
+$routes->get('menu/delete/(:segment)', 'MenuController::delete/$1');
+$routes->get('pelanggan', 'PelangganController::index');
+$routes->get('pelanggan/create', 'PelangganController::create');
+$routes->post('pelanggan/save', 'PelangganController::save');
+$routes->get('pelanggan/edit/(:segment)', 'PelangganController::edit/$1');
+$routes->post('pelanggan/update/(:segment)', 'PelangganController::update/$1');
+$routes->get('pelanggan/delete/(:segment)', 'PelangganController::delete/$1');
+$routes->get('karyawan', 'KaryawanController::index');
+$routes->get('karyawan/create', 'KaryawanController::create');
+$routes->post('karyawan/save', 'KaryawanController::save');
+$routes->get('karyawan/edit/(:segment)', 'KaryawanController::edit/$1');
+$routes->post('karyawan/update/(:segment)', 'KaryawanController::update/$1');
+$routes->get('karyawan/delete/(:segment)', 'KaryawanController::delete/$1');
 /*
  * --------------------------------------------------------------------
  * Additional Routing

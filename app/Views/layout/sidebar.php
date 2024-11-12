@@ -9,6 +9,8 @@
                         Dashboard
                     </a>
                     <div class="sb-sidenav-menu-heading">Interface</div>
+                    
+                    <!-- Menu Interface -->
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                         <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                         Menu
@@ -18,6 +20,31 @@
                         <nav class="sb-sidenav-menu-nested nav">
                             <a class="nav-link" href="<?= base_url('menu') ?>">Data Menu</a>
                             <a class="nav-link" href="<?= base_url('menu/create') ?>">Tambah Menu</a>
+                        </nav>
+                    </div>
+
+                    <!-- Pelanggan Interface -->
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePelanggan" aria-expanded="false" aria-controls="collapsePelanggan">
+                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                        Pelanggan
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapsePelanggan" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="<?= base_url('pelanggan') ?>">Data Pelanggan</a>
+                            <a class="nav-link" href="<?= base_url('pelanggan/create') ?>">Tambah Pelanggan</a>
+                        </nav>
+                    </div>
+                    <!-- Karyawan Interface -->
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseKaryawan" aria-expanded="false" aria-controls="collapseKaryawan">
+                        <div class="sb-nav-link-icon"><i class="fas fa-user-tie"></i></div>
+                        Karyawan
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseKaryawan" aria-labelledby="headingThree" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="<?= base_url('karyawan') ?>">Data Karyawan</a>
+                            <a class="nav-link" href="<?= base_url('karyawan/create') ?>">Tambah Karyawan</a>
                         </nav>
                     </div>
                 </div>
