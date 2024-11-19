@@ -26,29 +26,50 @@ class VoucherController extends ResourceController
 
     public function create()
     {
+        // Generate kode voucher
+        $prefix = 'VCR';
+        $date = date('Ymd');
+        $lastVoucher = $this->voucherModel->orderBy('kode_voucher', 'DESC')->first();
+        
+        if ($lastVoucher) {
+            $lastNumber = substr($lastVoucher['kode_voucher'], -3);
+            $nextNumber = str_pad((int)$lastNumber + 1, 3, '0', STR_PAD_LEFT);
+        } else {
+            $nextNumber = '001';
+        }
+        
+        $kode_voucher = $prefix . $date . $nextNumber;
+        
         $data = [
-            'title' => 'Tambah Voucher'
+            'title' => 'Tambah Voucher',
+            'kode_voucher' => $kode_voucher
         ];
-
+        
         return view('voucher/create', $data);
     }
 
     public function store()
     {
-        if (!$this->validate($this->voucherModel->validationRules, $this->voucherModel->validationMessages)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        }
-
-        $data = [
-            'kode_voucher' => $this->request->getPost('kode_voucher'),
-            'jumlah_poin' => $this->request->getPost('jumlah_poin')
+        // Validasi input
+        $rules = [
+            'kode_voucher' => 'required|min_length[5]|is_unique[voucher.kode_voucher]',
+            'jumlah_poin' => 'required|numeric|greater_than[0]'
         ];
-
+    
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('error', 'Validasi gagal');
+        }
+    
         try {
+            $data = [
+                'kode_voucher' => $this->request->getPost('kode_voucher'),
+                'jumlah_poin' => $this->request->getPost('jumlah_poin')
+            ];
+    
             $this->voucherModel->insert($data);
             return redirect()->to('voucher')->with('success', 'Voucher berhasil ditambahkan');
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan saat menyimpan data');
+            return redirect()->back()->with('error', 'Gagal menambahkan voucher: ' . $e->getMessage());
         }
     }
 

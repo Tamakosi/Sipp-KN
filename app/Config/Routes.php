@@ -57,6 +57,14 @@ $routes->get('transaksi/detail/(:segment)', 'TransaksiController::detail/$1');
 $routes->get('transaksi/edit/(:segment)', 'TransaksiController::edit/$1');
 $routes->post('transaksi/update/(:segment)', 'TransaksiController::update/$1');
 $routes->get('transaksi/delete/(:segment)', 'TransaksiController::delete/$1');
+$routes->group('voucher', function($routes) {
+    $routes->get('/', 'VoucherController::index');
+    $routes->get('create', 'VoucherController::create');
+    $routes->post('store', 'VoucherController::store');
+    $routes->get('edit/(:segment)', 'VoucherController::edit/$1');
+    $routes->post('update/(:segment)', 'VoucherController::update/$1');
+    $routes->get('delete/(:segment)', 'VoucherController::delete/$1');
+});
 /*
  * --------------------------------------------------------------------
  * Additional Routing

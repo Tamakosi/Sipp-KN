@@ -6,13 +6,11 @@ use CodeIgniter\Model;
 
 class VoucherModel extends Model
 {
-    protected $table            = 'kodevoucher';
-    protected $primaryKey       = 'kode_voucher';
+    protected $table = 'kodevoucher';  // Ubah nama tabel
+    protected $primaryKey = 'kode_voucher';
     protected $useAutoIncrement = false;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = true;
-    protected $protectFields    = true;
-    protected $allowedFields    = ['kode_voucher', 'jumlah_poin'];
+    protected $allowedFields = ['kode_voucher', 'jumlah_poin'];
+    protected $returnType = 'array';
 
     // Dates
     protected $useTimestamps = true;
