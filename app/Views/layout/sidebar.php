@@ -47,6 +47,18 @@
                             <a class="nav-link" href="<?= base_url('karyawan/create') ?>">Tambah Karyawan</a>
                         </nav>
                     </div>
+                    <!-- Transaksi Interface -->
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTransaksi" aria-expanded="false" aria-controls="collapseTransaksi">
+                        <div class="sb-nav-link-icon"><i class="fas fa-shopping-cart"></i></div>
+                        Transaksi
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseTransaksi" aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="<?= base_url('transaksi') ?>">Data Transaksi</a>
+                            <a class="nav-link" href="<?= base_url('transaksi/create') ?>">Tambah Transaksi</a>
+                        </nav>
+                    </div>
                 </div>
             </div>
             <div class="sb-sidenav-footer">

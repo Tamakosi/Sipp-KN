@@ -50,6 +50,13 @@ $routes->post('karyawan/save', 'KaryawanController::save');
 $routes->get('karyawan/edit/(:segment)', 'KaryawanController::edit/$1');
 $routes->post('karyawan/update/(:segment)', 'KaryawanController::update/$1');
 $routes->get('karyawan/delete/(:segment)', 'KaryawanController::delete/$1');
+$routes->get('transaksi', 'TransaksiController::index');
+$routes->get('transaksi/create', 'TransaksiController::create');
+$routes->post('transaksi/store', 'TransaksiController::store');
+$routes->get('transaksi/detail/(:segment)', 'TransaksiController::detail/$1');
+$routes->get('transaksi/edit/(:segment)', 'TransaksiController::edit/$1');
+$routes->post('transaksi/update/(:segment)', 'TransaksiController::update/$1');
+$routes->get('transaksi/delete/(:segment)', 'TransaksiController::delete/$1');
 /*
  * --------------------------------------------------------------------
  * Additional Routing
