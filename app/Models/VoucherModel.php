@@ -6,10 +6,10 @@ use CodeIgniter\Model;
 
 class VoucherModel extends Model
 {
-    protected $table = 'kodevoucher';  // Ubah nama tabel
+    protected $table = 'kodevoucher';
     protected $primaryKey = 'kode_voucher';
     protected $useAutoIncrement = false;
-    protected $allowedFields = ['kode_voucher', 'jumlah_poin'];
+    protected $allowedFields = ['kode_voucher', 'diskon'];
     protected $returnType = 'array';
 
     // Dates
@@ -21,21 +21,21 @@ class VoucherModel extends Model
 
     // Validation
     protected $validationRules = [
-        'kode_voucher' => 'required|min_length[3]|max_length[20]|is_unique[kodevoucher.kode_voucher,kode_voucher,{kode_voucher}]',
-        'jumlah_poin'  => 'required|numeric|greater_than[0]'
+        'kode_voucher' => 'required|min_length[3]|max_length[20]|is_unique[kodevoucher.kode_voucher]',
+        'diskon'       => 'required|numeric|greater_than[0]'
     ];
     
     protected $validationMessages = [
         'kode_voucher' => [
-            'required'    => 'Kode voucher harus diisi',
-            'min_length'  => 'Kode voucher minimal 3 karakter',
-            'max_length'  => 'Kode voucher maksimal 20 karakter',
-            'is_unique'   => 'Kode voucher sudah digunakan'
+            'required'    => 'Kode voucher harus diisi.',
+            'min_length'  => 'Kode voucher minimal 3 karakter.',
+            'max_length'  => 'Kode voucher maksimal 20 karakter.',
+            'is_unique'   => 'Kode voucher sudah digunakan.'
         ],
-        'jumlah_poin'  => [
-            'required'      => 'Jumlah poin harus diisi',
-            'numeric'       => 'Jumlah poin harus berupa angka',
-            'greater_than'  => 'Jumlah poin harus lebih dari 0'
+        'diskon'       => [
+            'required'      => 'Diskon harus diisi.',
+            'numeric'       => 'Diskon harus berupa angka.',
+            'greater_than'  => 'Diskon harus lebih dari 0.'
         ]
     ];
 
@@ -46,13 +46,13 @@ class VoucherModel extends Model
     public function getActiveVouchers()
     {
         return $this->where('deleted_at', null)
-                   ->findAll();
+                    ->findAll();
     }
 
     public function isVoucherValid($kodeVoucher)
     {
         return $this->where('kode_voucher', $kodeVoucher)
-                   ->where('deleted_at', null)
-                   ->first();
+                    ->where('deleted_at', null)
+                    ->first();
     }
 }

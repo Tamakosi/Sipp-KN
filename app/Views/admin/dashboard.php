@@ -3,21 +3,32 @@
         <div class="container-fluid px-4">
             <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
                 <div class="col-md-6 text-center welcome-container">
-                    <!-- Welcome Text dengan animasi -->
-                    <h1 class="animate-welcome">Welcome</h1>
-                    
-                    <!-- Coffee Icon dengan animasi -->
+                    <!-- Welcome Text -->
+                    <?php if ($session->get('logged_in')): ?>
+                        <h1 class="animate-welcome">Welcome, <?= ucfirst($session->get('username')) ?>!</h1>
+                    <?php else: ?>
+                        <h1 class="animate-welcome">Welcome to Kedai Ngobat</h1>
+                    <?php endif; ?>
+
+                    <!-- Coffee Icon -->
                     <div class="coffee-container mb-4">
                         <i class="fas fa-coffee coffee-icon"></i>
                     </div>
-                    
-                    <!-- Text dengan animasi fade-in -->
-                    <p class="lead text-muted fade-in">Selamat datang di Kedai Ngobat</p>
+
+                    <!-- Text -->
+                    <?php if ($session->get('logged_in')): ?>
+                        <p class="lead text-muted fade-in">Selamat datang di Kedai Ngobat</p>
+                    <?php else: ?>
+                        <p class="lead text-muted fade-in">
+                            Silakan <a href="<?= base_url('login') ?>">login</a> untuk mengakses fitur lengkap.
+                        </p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </main>
 </div>
+
 
 <style>
 .welcome-container {

@@ -1,3 +1,5 @@
+<?php $validation = \Config\Services::validation(); ?>
+
 <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid px-4">
@@ -13,43 +15,52 @@
                             <form action="<?= base_url('menu/update/' . $menu['id_menu']) ?>" method="post">
                                 <?= csrf_field() ?>
 
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3 mb-md-0">
-                                            <input class="form-control" 
-                                                   type="text" 
-                                                   value="<?= $menu['id_menu'] ?>" 
-                                                   readonly />
-                                            <label>ID Menu</label>
+                                <!-- Field ID Menu -->
+                                <div class="mb-3">
+                                    <label for="id_menu">ID Menu</label>
+                                    <input
+                                        class="form-control <?= ($validation->hasError('id_menu')) ? 'is-invalid' : '' ?>"
+                                        id="id_menu" name="id_menu" type="text"
+                                        value="<?= old('id_menu', $menu['id_menu']) ?>"
+                                        pattern="^M[0-9]{3}$"
+                                        title="ID Menu harus diawali huruf 'M' diikuti 3 digit angka (contoh: M001)"
+                                        required />
+                                    <?php if ($validation->hasError('id_menu')): ?>
+                                        <div class="invalid-feedback">
+                                            <?= $validation->getError('id_menu'); ?>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating">
-                                            <input class="form-control <?= (session('errors.nama_menu')) ? 'is-invalid' : '' ?>" 
-                                                   id="nama_menu" 
-                                                   name="nama_menu" 
-                                                   type="text" 
-                                                   value="<?= old('nama_menu', $menu['nama_menu']) ?>" />
-                                            <label for="nama_menu">Nama Menu</label>
-                                            <div class="invalid-feedback">
-                                                <?= session('errors.nama_menu') ?>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <?php endif; ?>
                                 </div>
 
-                                <div class="form-floating mb-3">
-                                    <input class="form-control <?= (session('errors.harga_menu')) ? 'is-invalid' : '' ?>" 
-                                           id="harga_menu" 
-                                           name="harga_menu" 
-                                           type="number" 
-                                           value="<?= old('harga_menu', $menu['harga_menu']) ?>" />
+                                <!-- Field Nama Menu -->
+                                <div class="mb-3">
+                                    <label for="nama_menu">Nama Menu</label>
+                                    <input
+                                        class="form-control <?= ($validation->hasError('nama_menu')) ? 'is-invalid' : '' ?>"
+                                        id="nama_menu" name="nama_menu" type="text"
+                                        value="<?= old('nama_menu', $menu['nama_menu']) ?>" required />
+                                    <?php if ($validation->hasError('nama_menu')): ?>
+                                        <div class="invalid-feedback">
+                                            <?= $validation->getError('nama_menu'); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- Field Harga Menu -->
+                                <div class="mb-3">
                                     <label for="harga_menu">Harga Menu</label>
-                                    <div class="invalid-feedback">
-                                        <?= session('errors.harga_menu') ?>
-                                    </div>
+                                    <input
+                                        class="form-control <?= ($validation->hasError('harga_menu')) ? 'is-invalid' : '' ?>"
+                                        id="harga_menu" name="harga_menu" type="number"
+                                        value="<?= old('harga_menu', $menu['harga_menu']) ?>" min="0" required />
+                                    <?php if ($validation->hasError('harga_menu')): ?>
+                                        <div class="invalid-feedback">
+                                            <?= $validation->getError('harga_menu'); ?>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
 
+                                <!-- Tombol Submit -->
                                 <div class="mt-4 mb-0">
                                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                         <a class="btn btn-secondary" href="<?= base_url('menu') ?>">
@@ -61,10 +72,10 @@
                                     </div>
                                 </div>
                             </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        </div> <!-- End of card-body -->
+                    </div> <!-- End of card -->
+                </div> <!-- End of col-lg-7 -->
+            </div> <!-- End of row -->
+        </div> <!-- End of container-fluid -->
     </main>
 </div>

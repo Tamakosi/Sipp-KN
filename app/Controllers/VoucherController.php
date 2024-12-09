@@ -3,149 +3,128 @@
 namespace App\Controllers;
 
 use App\Models\VoucherModel;
-use CodeIgniter\RESTful\ResourceController;
+use App\Models\TransaksiModel;
 
-class VoucherController extends ResourceController
+class VoucherController extends BaseController
 {
     protected $voucherModel;
+    protected $transaksiModel;
+    protected $session;
+    protected $data = [];
 
     public function __construct()
     {
         $this->voucherModel = new VoucherModel();
+        $this->transaksiModel = new TransaksiModel();
+        $this->session = \Config\Services::session();
+        $this->data['session'] = $this->session;
     }
 
     public function index()
     {
-        $data = [
-            'title' => 'Data Voucher',
-            'voucher' => $this->voucherModel->findAll()
-        ];
+        $this->data['title'] = 'Data Voucher';
+        $this->data['vouchers'] = $this->voucherModel->findAll();
 
-        return view('voucher/index', $data);
+        return view('layout/header', $this->data)
+             . view('layout/topbar', $this->data)
+             . view('layout/sidebar', $this->data)
+             . view('voucher/index', $this->data)
+             . view('layout/footer', $this->data);
+    }
+
+    public function history($kode_voucher)
+    {
+        // Dapatkan detail voucher
+        $voucher = $this->voucherModel->find($kode_voucher);
+
+        if (!$voucher) {
+            $this->session->setFlashdata('error', 'Voucher tidak ditemukan');
+            return redirect()->to(base_url('voucher'));
+        }
+
+        // Dapatkan transaksi yang menggunakan voucher ini
+        $transactions = $this->transaksiModel->getTransaksiByVoucher($kode_voucher);
+
+        $this->data['title'] = 'Riwayat Pemakaian Voucher';
+        $this->data['voucher'] = $voucher;
+        $this->data['transactions'] = $transactions;
+
+        return view('layout/header', $this->data)
+             . view('layout/topbar', $this->data)
+             . view('layout/sidebar', $this->data)
+             . view('voucher/history', $this->data)
+             . view('layout/footer', $this->data);
     }
 
     public function create()
     {
-        // Generate kode voucher
-        $prefix = 'VCR';
-        $date = date('Ymd');
-        $lastVoucher = $this->voucherModel->orderBy('kode_voucher', 'DESC')->first();
-        
-        if ($lastVoucher) {
-            $lastNumber = substr($lastVoucher['kode_voucher'], -3);
-            $nextNumber = str_pad((int)$lastNumber + 1, 3, '0', STR_PAD_LEFT);
-        } else {
-            $nextNumber = '001';
-        }
-        
-        $kode_voucher = $prefix . $date . $nextNumber;
-        
-        $data = [
-            'title' => 'Tambah Voucher',
-            'kode_voucher' => $kode_voucher
-        ];
-        
-        return view('voucher/create', $data);
+        $this->data['title'] = 'Tambah Voucher';
+        return view('layout/header', $this->data)
+            . view('layout/topbar', $this->data)
+            . view('layout/sidebar', $this->data)
+            . view('voucher/create', $this->data)
+            . view('layout/footer', $this->data);
     }
 
     public function store()
     {
-        // Validasi input
-        $rules = [
-            'kode_voucher' => 'required|min_length[5]|is_unique[voucher.kode_voucher]',
-            'jumlah_poin' => 'required|numeric|greater_than[0]'
-        ];
-    
-        if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('error', 'Validasi gagal');
-        }
-    
-        try {
-            $data = [
-                'kode_voucher' => $this->request->getPost('kode_voucher'),
-                'jumlah_poin' => $this->request->getPost('jumlah_poin')
-            ];
-    
-            $this->voucherModel->insert($data);
-            return redirect()->to('voucher')->with('success', 'Voucher berhasil ditambahkan');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menambahkan voucher: ' . $e->getMessage());
-        }
-    }
-
-    public function edit($kodeVoucher = null)
-    {
-        $voucher = $this->voucherModel->find($kodeVoucher);
-        
-        if (!$voucher) {
-            return redirect()->to('voucher')->with('error', 'Voucher tidak ditemukan');
-        }
-
-        $data = [
-            'title' => 'Edit Voucher',
-            'voucher' => $voucher
-        ];
-
-        return view('voucher/edit', $data);
-    }
-
-    public function update($kodeVoucher = null)
-    {
-        if (!$this->validate($this->voucherModel->validationRules, $this->voucherModel->validationMessages)) {
+        if (!$this->validate($this->voucherModel->getValidationRules(), $this->voucherModel->getValidationMessages())) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
         $data = [
-            'jumlah_poin' => $this->request->getPost('jumlah_poin')
+            'kode_voucher' => $this->request->getPost('kode_voucher'),
+            'diskon'       => $this->request->getPost('diskon')
         ];
 
         try {
-            $this->voucherModel->update($kodeVoucher, $data);
-            return redirect()->to('voucher')->with('success', 'Voucher berhasil diperbarui');
+            $this->voucherModel->insert($data);
+            $this->session->setFlashdata('success', 'Voucher berhasil ditambahkan');
+            return redirect()->to(base_url('voucher'));
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan saat memperbarui data');
+            $this->session->setFlashdata('error', 'Gagal menyimpan voucher: ' . $e->getMessage());
+            return redirect()->back()->withInput();
         }
     }
 
-    public function delete($kodeVoucher = null)
+    public function edit($kode_voucher)
     {
-        try {
-            if ($this->voucherModel->delete($kodeVoucher)) {
-                return redirect()->to('voucher')->with('success', 'Voucher berhasil dihapus');
-            }
-            return redirect()->to('voucher')->with('error', 'Voucher tidak ditemukan');
-        } catch (\Exception $e) {
-            return redirect()->to('voucher')->with('error', 'Terjadi kesalahan saat menghapus data');
-        }
-    }
-
-    public function view($kodeVoucher = null)
-    {
-        $voucher = $this->voucherModel->find($kodeVoucher);
-        
+        $voucher = $this->voucherModel->find($kode_voucher);
         if (!$voucher) {
-            return redirect()->to('voucher')->with('error', 'Voucher tidak ditemukan');
+            $this->session->setFlashdata('error', 'Voucher tidak ditemukan');
+            return redirect()->to(base_url('voucher'));
+        }
+
+        $this->data['title'] = 'Edit Voucher';
+        $this->data['voucher'] = $voucher;
+
+        return view('layout/header', $this->data)
+            . view('layout/topbar', $this->data)
+            . view('layout/sidebar', $this->data)
+            . view('voucher/edit', $this->data)
+            . view('layout/footer', $this->data);
+    }
+
+    public function update($kode_voucher)
+    {
+        if (!$this->validate($this->voucherModel->getValidationRules())) {
+            $this->session->setFlashdata('error', 'Validasi gagal');
+            return redirect()->back()->withInput();
         }
 
         $data = [
-            'title' => 'Detail Voucher',
-            'voucher' => $voucher
+            'diskon' => $this->request->getPost('diskon')
         ];
 
-        return view('voucher/view', $data);
+        $this->voucherModel->update($kode_voucher, $data);
+        $this->session->setFlashdata('success', 'Voucher berhasil diperbarui');
+        return redirect()->to(base_url('voucher'));
     }
 
-    public function search()
+    public function delete($kode_voucher)
     {
-        $keyword = $this->request->getGet('search');
-        
-        $data = [
-            'title' => 'Data Voucher',
-            'voucher' => $this->voucherModel->like('kode_voucher', $keyword)
-                                          ->orLike('jumlah_poin', $keyword)
-                                          ->findAll()
-        ];
-
-        return view('voucher/index', $data);
+        $this->voucherModel->delete($kode_voucher);
+        $this->session->setFlashdata('success', 'Voucher berhasil dihapus');
+        return redirect()->to(base_url('voucher'));
     }
 }

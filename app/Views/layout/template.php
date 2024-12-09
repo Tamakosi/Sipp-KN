@@ -10,7 +10,11 @@
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"></script>
 </head>
 <body class="sb-nav-fixed">
-    <?= $this->renderSection('content') ?>
+    <?= $this->include('layout/header'); ?>
+
+<?= $this->renderSection('content'); ?>
+
+<?= $this->include('layout/footer'); ?>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?= base_url('js/scripts.js') ?>"></script>

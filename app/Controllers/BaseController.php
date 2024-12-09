@@ -11,6 +11,8 @@ use App\Models\VoucherModel;
 
 class BaseController extends Controller
 {
+    protected $session;
+    protected $data = [];
     protected $helpers = ['url', 'form'];
     protected $menuModel;
     protected $pelangganModel;
@@ -35,6 +37,9 @@ class BaseController extends Controller
 
         // Inisialisasi session
         $this->session = \Config\Services::session();
+        $this->data['session'] = $this->session;
+        $this->data['username'] = $this->session->get('username') ?? 'Guest';
+        $this->data['role'] = $this->session->get('role') ?? 'Guest';
     }
 
     public function getModel($modelName)
